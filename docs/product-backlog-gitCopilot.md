@@ -1,0 +1,110 @@
+# Product Backlog — Remarketing Tool
+
+**Fuente analizada:** `ELEMENT-REMARKETING-AlcanceFuncionalDetallado-V01.00@20261013-1800HRS (1).docx`  
+**Criterio de lectura:** «Confirmado» significa que la capacidad aparece en el alcance; no implica que sus reglas de detalle estén cerradas. El documento incluye tamaños funcionales relativos, pero no prioridades de negocio; por ello la prioridad queda pendiente de priorización.
+
+## A. Resumen del producto
+
+| Aspecto | Descripción | Fuente / estado |
+|---|---|---|
+| Problema que se desea resolver | Gestionar solicitudes de remarketing, sus unidades y actividades relacionadas en Remarketing Tool. El problema de negocio y su línea base no están cuantificados. | Documento, descripción de procesos / Parcial; validar con negocio |
+| Objetivo del producto | Construir la aplicación Remarketing Tool para operar solicitudes regulares e históricas, con tracking e integración con los servicios disponibles. | Documento, consideraciones generales y RF-001 a RF-010 / Confirmado |
+| Usuarios principales | Usuarios que buscan, crean, modifican y gestionan solicitudes; la visibilidad de datos depende del perfil. No se detallan perfiles o personas concretas. | RF-001, RF-008 y consideraciones generales / Parcial |
+| Alcance conocido | Búsqueda, alta, modificación/cancelación, unidades manuales y masivas, validación batch, patios, pickups, documentos/placas/bajas, órdenes de trabajo, tracking, exportación XLSX/PDF, cierre y depuración histórica. | RF-001 a RF-010 / Confirmado |
+| Exclusiones | Administración de usuarios, perfiles, opciones de menú, controles de acceso, catálogos/parámetros generales y mecanismos de bitácora ya existentes; también la administración particular de las reglas de configuración y asignación de patios. | Consideraciones generales / Fuera de alcance indicado |
+| Indicadores de éxito | No se definen indicadores ni metas medibles en el documento. | No especificado / Pendiente |
+
+## B. Product Backlog
+
+| ID | Épica | Título | Tipo | Historia o descripción | Valor de negocio | Criterios de aceptación | Prioridad sugerida | Dependencias | Estado de análisis | Preguntas abiertas | Fuente |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| PB-001 | Operación regular | Buscar solicitudes de remarketing | Historia | Como usuario, quiero buscar solicitudes registradas y ver solo las que mi perfil permite consultar, para localizar las solicitudes que puedo gestionar. | Propuesto: facilita localizar solicitudes respetando la visibilidad por perfil. | Dado un usuario con perfil asignado, cuando consulta solicitudes, entonces el resultado se limita a las solicitudes que puede visualizar según ese perfil. | Pendiente de priorizar | Mecanismos existentes de perfil y acceso a datos. | Confirmado: capacidad; filtros por definir | ¿Qué filtros, orden, paginación y campos usa la búsqueda general? ¿Cómo se definen los permisos por perfil? | CMP000-RF001, CMP000-RF002 |
+| PB-002 | Operación regular | Crear solicitud de remarketing | Historia | Como usuario, quiero crear una solicitud con datos capturados y validados, para incorporarla a Remarketing Tool. | Propuesto: permite iniciar la gestión de una solicitud en la aplicación. | Dado que el usuario captura la información requerida, cuando confirma el alta, entonces la aplicación valida conforme a las reglas configuradas y persiste la solicitud. | Pendiente de priorizar | Reglas de configuración existentes; API.ELEMENT.Buscar Clientes; API.ELEMENT.Buscar Flotas. | Confirmado: capacidad; datos y reglas por definir | ¿Qué campos son obligatorios? ¿Qué validaciones, estados iniciales y reglas de numeración aplican? | CMP000-RF001, CMP000-RF002 |
+| PB-003 | Operación regular | Modificar o cancelar solicitud | Historia | Como usuario autorizado, quiero modificar una solicitud o indicar su cancelación, para mantenerla actualizada o detener su gestión. | Propuesto: permite corregir o cancelar solicitudes en la aplicación. | Dada una solicitud existente, cuando el usuario guarda cambios o indica cancelación, entonces la aplicación valida y actualiza la información de la solicitud. | Pendiente de priorizar | PB-002; reglas de configuración y mecanismos de acceso existentes. | Confirmado: capacidad; condiciones por definir | ¿Qué campos pueden modificarse? ¿Quién puede cancelar? ¿Qué efecto tiene la cancelación y qué transiciones de estado se permiten? | CMP000-RF001, CMP000-RF002 |
+| PB-004 | Operación regular | Mantener unidades de una solicitud | Historia | Como usuario, quiero agregar o modificar unidades de una solicitud, para mantener la lista de unidades asociada. | Propuesto: habilita la gestión individual de las unidades. | Dada una solicitud, cuando el usuario agrega o modifica una unidad, entonces la aplicación valida la información conforme a las reglas definidas y actualiza la lista asociada. | Pendiente de priorizar | PB-002; API.ELEMENT.Buscar VINs; reglas de configuración de solicitudes. | Confirmado: capacidad; validaciones por definir | ¿Qué campos se capturan? ¿Qué validaciones determinan un VIN válido o duplicado? ¿Puede eliminarse una unidad? | CMP000-RF002 |
+| PB-005 | Operación regular | Cargar unidades masivamente | Historia | Como usuario, quiero cargar un archivo de unidades a una solicitud, para registrar varias unidades en una operación. | Propuesto: reduce la captura individual de unidades. | Dada una solicitud sin unidades y un archivo de hasta 1000 unidades, cuando el usuario confirma la carga, entonces la aplicación valida layout y contenido y carga el archivo completo solo si todos sus registros son correctos. Si el archivo contiene errores o la solicitud ya tiene unidades, rechaza la carga completa. | Pendiente de priorizar | PB-002; API.ELEMENT.Buscar VINs; definición del layout y reglas de validación. | Confirmado: límite y rechazo total; layout pendiente | ¿Cuál es el formato del archivo, las columnas, las reglas por campo y el reporte de errores que se presenta al usuario? | CMP000-RF002 |
+| PB-006 | Operación regular | Validar solicitudes activas | Historia / proceso batch | Como sistema, quiero validar las solicitudes activas contra catálogos, parámetros y reglas, para detectar observaciones y actualizar su estatus. | Propuesto: centraliza validaciones y comunica observaciones detectadas. | Dadas solicitudes activas, cuando se ejecuta el proceso batch, entonces valida cada solicitud contra catálogos/parámetros maestros, reglas de configuración y reglas de asignación de patios; si detecta observaciones, genera una notificación que las reúna, actualiza el estatus y persiste los cambios. | Pendiente de priorizar | Reglas de configuración y de patios; APIs de búsqueda de VIN, cliente, flota, proveedor y demás servicios que defina la validación. | Confirmado: proceso y tipos de validación; reglas/frecuencia pendientes | ¿Cuál es la frecuencia del batch? ¿Qué estados asigna? ¿Cómo se corrigen y se vuelven a evaluar las observaciones? ¿Quién recibe las notificaciones? | CMP000-RF003 |
+| PB-007 | Operación regular | Asignar o desasignar patio a una unidad | Historia | Como usuario, quiero asignar o desasignar un patio a una unidad manualmente o conforme a reglas, para gestionar el patio asociado. | Propuesto: permite administrar la asignación operativa de patios por unidad. | Dada una unidad de una solicitud, cuando se asigna o desasigna un patio, entonces la aplicación aplica las reglas de asignación definidas y persiste el resultado. | Pendiente de priorizar | PB-004; reglas de asignación existentes; API.ELEMENT.Buscar Proveedores. | Confirmado: capacidad; reglas por definir | ¿Qué condiciones permiten asignar o desasignar? ¿Se conserva historial de cambios? ¿Qué ocurre si una asignación no cumple las reglas? | CMP000-RF004 |
+| PB-008 | Operación regular | Programar o reprogramar pickup | Historia | Como usuario, quiero programar o reprogramar el pickup de una unidad, para mantener su coordinación logística. | Propuesto: permite gestionar fechas de pickup y comunicar cambios. | Dada una unidad, cuando el usuario programa o reprograma su pickup, entonces la aplicación actualiza el pickup y el estatus de la solicitud, persiste los datos y utiliza el servicio de correo según la política definida. | Pendiente de priorizar | PB-007; API.ELEMENT.Enviar correo. | Confirmado: capacidad y actualización de estatus; reglas de comunicación pendientes | ¿Qué datos y estados se actualizan? ¿Quién recibe el correo, en qué eventos y con qué contenido? | CMP000-RF005 |
+| PB-009 | Operación regular | Mantener documentos, placas y bajas | Historia | Como usuario, quiero dar de alta o modificar los registros de documentos, placas y bajas de una unidad, para mantener esa información vinculada a la solicitud. | Propuesto: mantiene los registros documentales y operativos asociados a cada unidad. | Dada una unidad de una solicitud, cuando el usuario da de alta o modifica un registro de documento, placa o baja, entonces la aplicación actualiza la información relacionada y utiliza los servicios DMS disponibles para buscar o registrar documentos cuando corresponda. | Pendiente de priorizar | PB-004; API.ELEMENT.DMS.Buscar Documentos; API.ELEMENT.DMS.Registrar Documento. | Confirmado: capacidad e integración; reglas por definir | ¿Qué tipos de registro y documentos se permiten? ¿Cuáles son obligatorios? ¿Qué campos, evidencias y reglas aplican a placas y bajas? | CMP000-RF006 |
+| PB-010 | Operación regular | Solicitar y relacionar orden de trabajo | Historia | Como usuario, quiero solicitar una OT a Collateral y relacionarla con una solicitud de remarketing, para registrar el trabajo requerido. | Propuesto: conecta la solicitud con el proceso de órdenes de trabajo. | Dada una solicitud que requiere una OT, cuando el usuario solicita su creación, entonces la aplicación invoca el servicio de Collateral y persiste la relación de la OT con la solicitud; la aplicación registra la notificación que corresponda según la política definida. | Pendiente de priorizar | PB-002; API.ELEMENT.Solicitar creación de una OT; API.ELEMENT.Enviar correo. | Confirmado: capacidad e integración; condiciones por definir | ¿Quién determina que se requiere una OT? ¿Qué datos se envían? ¿Cómo se manejan errores, reintentos y respuestas de Collateral? ¿Qué notifica el sistema y a quién? | CMP000-RF007 |
+| PB-011 | Operación regular | Consultar pantalla única de administración y tracking | Historia | Como usuario, quiero consultar solicitudes y sus unidades en una vista tabular filtrable, para dar seguimiento según mi perfil. | Propuesto: concentra la visibilidad del proceso en una vista. | Dado un usuario con perfil asignado, cuando aplica filtros, entonces la vista respeta su acceso y permite filtrar por rango de fechas, estatus, cliente/fleet/eco group, patio/proveedor y VIN/unidad. La tabla presenta VIN, unidad, cliente, estatus, proveedor, patio, fechas, documentos, OT, baja/placas, sold date/subasta, usuario y última actualización. | Pendiente de priorizar | Mecanismos de perfil y acceso existentes; solicitudes, unidades, patios, pickups, OT, cierres y notificaciones. | Confirmado: filtros, columnas y control por perfil; comportamiento adicional por definir | ¿Qué fechas filtra el rango? ¿Cómo se define cada columna compuesta? ¿Se requieren ordenamiento, paginación o límites de consulta? | CMP000-RF008 |
+| PB-012 | Operación regular | Exportar la vista de tracking a XLSX | Historia | Como usuario, quiero descargar en XLSX la vista de tracking que tengo desplegada, para analizarla fuera de la aplicación. | Propuesto: facilita análisis de los datos visibles. | Dada una vista de tracking desplegada, cuando el usuario solicita la exportación XLSX, entonces la aplicación genera un archivo con los datos de esa vista e inicia su descarga. | Pendiente de priorizar | PB-011. | Confirmado: formato y exportación de la última vista | ¿La vista exportada incluye todas las filas mostradas o existe límite? ¿Qué formato y nombre debe tener el archivo? | CMP000-RF008 |
+| PB-013 | Operación regular | Exportar la vista de tracking a PDF | Historia | Como usuario, quiero descargar en PDF la vista de tracking que tengo desplegada, para compartirla o conservarla. | Propuesto: facilita compartir o archivar los datos visibles. | Dada una vista de tracking desplegada, cuando el usuario solicita la exportación PDF, entonces la aplicación genera un archivo con los datos de esa vista e inicia su descarga. | Pendiente de priorizar | PB-011. | Confirmado: formato y exportación de la última vista | ¿Qué diseño, encabezados, paginación y formato del reporte se requieren? | CMP000-RF008 |
+| PB-014 | Operación regular | Registrar cierre de solicitud o unidades | Historia | Como usuario, quiero crear un registro de cierre para una solicitud o sus unidades, para dejar constancia del cierre del proceso correspondiente. | Propuesto: formaliza el cierre a nivel de solicitud o unidad. | Dada una solicitud o unidad, cuando el usuario captura y confirma un registro de cierre, entonces la aplicación valida y persiste el registro asociado al elemento correspondiente. | Pendiente de priorizar | PB-002; PB-004 para cierres a nivel de unidad. | Confirmado: registro de cierre; condiciones y campos por definir | ¿Qué campos contiene el registro? ¿Qué condiciones permiten cerrar una solicitud o unidad? ¿El cierre cambia el estatus o bloquea modificaciones? | CMP000-RF009 |
+| PB-015 | Operación histórica | Depurar solicitudes históricas | Historia / proceso batch | Como sistema, quiero aplicar reglas de depuración a las solicitudes activas y desactivar las que correspondan, para gestionar el histórico de Remarketing Tool. | Propuesto: automatiza la inactivación histórica conforme a reglas acordadas. | Dadas solicitudes activas, cuando se ejecuta el proceso batch, entonces evalúa cada solicitud con las reglas de depuración definidas, inactiva las que cumplen las condiciones y persiste el resultado. | Pendiente de priorizar | Definición de reglas de depuración; solicitudes, unidades y registros de cierre. | Confirmado: proceso; reglas y frecuencia pendientes | ¿Qué antigüedad/condiciones determinan la depuración? ¿Cuál es la frecuencia? ¿Qué datos se conservan y cómo se auditan las inactivaciones? | CMP000-RF010 |
+
+## C. Reglas de negocio
+
+| ID | Descripción | Origen | Elementos afectados | Estado de validación |
+|---|---|---|---|---|
+| RN-001 | Xcelerate debe bloquear la modificación de solicitudes de remarketing una vez que se envían a Remarketing Tool. | Consideraciones generales del documento | PB-002, PB-003 | Confirmado |
+| RN-002 | Un archivo de carga masiva no puede exceder 1000 unidades. | CMP000-RF002 | PB-005 | Confirmado |
+| RN-003 | La carga masiva se acepta únicamente si el archivo está 100% correcto; si contiene errores, se rechaza completo. | CMP000-RF002 | PB-005 | Confirmado; reglas detalladas pendientes |
+| RN-004 | No se permiten cargas masivas en solicitudes que ya tengan unidades asignadas. | CMP000-RF002 | PB-005 | Confirmado |
+| RN-005 | La búsqueda y el tracking deben limitar los datos visibles conforme al perfil del usuario. | CMP000-RF001, CMP000-RF008 y consideraciones generales | PB-001, PB-011 | Confirmado; matriz de permisos pendiente |
+| RN-006 | El batch de validación revisa catálogos/parámetros, reglas de solicitud y reglas de asignación de patios; si detecta observaciones, genera una notificación por solicitud con la lista de observaciones. | CMP000-RF003 | PB-006 | Confirmado; reglas concretas pendientes |
+| RN-007 | Las reglas de configuración de solicitudes y de asignación de patios se gestionan con mecanismos existentes y quedan fuera del alcance de construir mecanismos particulares para administrarlas. | Consideraciones generales del documento | PB-002, PB-006, PB-007 | Confirmado |
+
+## D. Requisitos no funcionales y restricciones transversales
+
+| ID | Necesidad | Justificación | Criterio medible | Estado de validación | Fuente |
+|---|---|---|---|---|---|
+| RNF-001 | Reutilizar autenticación, perfiles, opciones de menú y control de acceso a datos/documentos existentes. | El documento indica que estos mecanismos se reutilizan sin cambios. | Las funciones y datos de Remarketing Tool respetan los mecanismos existentes de acceso por perfil. | Confirmado como restricción; pruebas y matriz de permisos por definir | Consideraciones generales; CMP000-RF001, CMP000-RF008 |
+| RNF-002 | Usar la bitácora de eventos existente, inalterable y confiable. | La plataforma base ya cuenta con mecanismos de bitácora que deben reutilizarse. | Las acciones que deban auditarse quedan registradas mediante la bitácora existente; eventos y cobertura por definir. | Confirmado como capacidad de plataforma; eventos por validar | Consideraciones generales |
+| RNF-003 | Integrar los componentes con los templates y arquitectura existentes de Front-End y Back-End. | La plataforma provee templates para el control de acceso y la interacción entre capas y servicios. | Los nuevos componentes se apegan a dichos templates y arquitectura; no se especifican métricas de calidad. | Confirmado como restricción arquitectónica | Consideraciones generales |
+| RNF-004 | Disponibilidad y comportamiento de APIs externas. | El alcance asume que las APIs ELEMENT y los servicios de Collateral están listos para invocarse. | Contratos, disponibilidad, tiempos de respuesta, errores y reintentos no están especificados. | Supuesto documentado; validar con equipos propietarios | Consideraciones generales y sección de APIs/servicios disponibles |
+
+El documento no define objetivos medibles de rendimiento, disponibilidad, accesibilidad, retención o recuperación. No se proponen umbrales sin validación de negocio y arquitectura.
+
+## E. Riesgos, supuestos y preguntas abiertas
+
+### Riesgos
+
+- **R-001:** Las reglas de configuración de solicitudes y de asignación de patios no están detalladas; bloquean la validación y la asignación automática (PB-006, PB-007).
+- **R-002:** El layout y las reglas de validación del archivo masivo están pendientes; bloquean el diseño completo de PB-005.
+- **R-003:** Los estados y sus transiciones no están especificados, aunque varios procesos actualizan el estatus (PB-003, PB-006, PB-008, PB-014, PB-015).
+- **R-004:** El alcance depende de APIs ELEMENT, DMS y Collateral; sus contratos y manejo de fallos no se documentan aquí.
+- **R-005:** La falta de campos de cierre, reglas de elegibilidad y criterios de depuración puede producir comportamientos inconsistentes en el cierre y el histórico (PB-014, PB-015).
+
+### Supuestos por confirmar
+
+- **S-001:** Los mecanismos de autenticación, perfilamiento, control de acceso, catálogos, parámetros y bitácora de la plataforma base están disponibles y se reutilizarán sin cambios.
+- **S-002:** Los servicios enumerados en la sección de APIs del documento estarán disponibles con los contratos requeridos, incluida la solicitud de OT a Collateral.
+- **S-003:** Xcelerate cargará solicitudes en la base de Remarketing Tool y bloqueará su modificación una vez enviadas.
+- **S-004:** La base de datos propia de la solución soportará las entidades internas descritas en el modelo de dominio: solicitudes, unidades, patios, pickups, OT, cierres, reglas y notificaciones.
+
+### Decisiones pendientes
+
+- **D-001:** Definir estados de solicitud, transiciones permitidas y efectos de cancelar, cerrar, validar o inactivar.
+- **D-002:** Definir campos obligatorios y validaciones de solicitud y unidad.
+- **D-003:** Aprobar layout, tamaño/formato del archivo, reglas de validación y mensajes de rechazo de carga masiva.
+- **D-004:** Definir reglas de configuración de solicitudes y asignación de patios, así como quién las mantiene en las herramientas existentes.
+- **D-005:** Definir frecuencia, horario, reintentos y reporte de resultados para los procesos batch de validación y depuración.
+- **D-006:** Definir destinatarios, eventos, contenido y política de envío de notificaciones por correo.
+- **D-007:** Definir reglas de programación/reprogramación de pickups y campos/estados que se actualizan.
+- **D-008:** Definir tipos, campos, obligatoriedad y validaciones de documentos, placas y bajas.
+- **D-009:** Definir cuándo se requiere OT, datos de solicitud, tratamiento de errores y reglas de respuesta de Collateral.
+- **D-010:** Definir campos, condiciones y efectos del registro de cierre, tanto para solicitud como para unidad.
+- **D-011:** Definir criterios, periodo de conservación y frecuencia para depurar solicitudes históricas.
+- **D-012:** Definir paginación, orden, volumen máximo y alcance de exportación del tracking.
+- **D-013:** Definir perfiles, permisos por función y datos visibles, reutilizando los mecanismos existentes.
+- **D-014:** Acordar objetivos de éxito y requisitos medibles de calidad de servicio.
+
+### Información faltante
+
+- Inventario de estados y transiciones; campos y reglas de cada entidad.
+- Reglas de configuración de solicitudes y asignación de patios.
+- Layout de carga masiva y catálogo de errores.
+- Política de correo y notificaciones.
+- Reglas de cierre y depuración histórica.
+- Contratos de APIs, incluyendo errores, idempotencia y reintentos.
+- Matriz de perfiles/permisos y objetivos de rendimiento/volumen.
+
+## F. Recomendaciones
+
+1. Resolver primero estados y transiciones, porque afectan modificación/cancelación, validación, pickups, cierre y depuración.
+2. Acordar reglas y layout de carga masiva antes de estimar PB-005; el límite de 1000 unidades sí está confirmado, pero no el contenido del archivo.
+3. Validar con los propietarios de las APIs los contratos de búsqueda, DMS, correo y OT, incluyendo fallos, duplicados y reintentos.
+4. Definir qué vistas y datos exporta cada formato y cómo se aplican los permisos del usuario a consultas, tracking y archivos descargados.
+5. Priorizar con Product Owner y áreas operativas. Los tamaños funcionales relativos del documento no sustituyen una prioridad basada en valor, riesgo y dependencias.
